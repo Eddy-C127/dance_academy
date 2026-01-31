@@ -38,7 +38,7 @@ export default function LoginPage() {
                 router.push('/home')
                 router.refresh()
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Error al iniciar sesión')
         } finally {
             setLoading(false)
@@ -66,7 +66,7 @@ export default function LoginPage() {
                 }
                 router.refresh()
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Error al iniciar sesión')
         } finally {
             setLoading(false)

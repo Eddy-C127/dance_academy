@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Bell, Calendar, Star, CreditCard, Award, Check, Trash2 } from 'lucide-react'
+import { Calendar, Star, CreditCard, Award } from 'lucide-react'
 
 interface Notification {
     id: number
