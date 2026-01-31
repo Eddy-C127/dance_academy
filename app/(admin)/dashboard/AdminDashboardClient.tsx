@@ -326,7 +326,7 @@ export default function AdminDashboardClient({
                                                     {pago.tutorTelefono}
                                                 </a>
                                                 <a
-                                                    href={`https://wa.me/${pago.tutorTelefono.replace(/\D/g, '')}?text=${encodeURIComponent(
+                                                    href={`https://wa.me/521${pago.tutorTelefono.replace(/\D/g, '')}?text=${encodeURIComponent(
                                                         `¡Hola ${pago.tutorNombre}! 👋 Esperamos que esté muy bien. Le escribimos de Dance Academy para recordarle amablemente que tiene pendiente el pago de ${formatCurrency(pago.monto)} por concepto de: ${pago.concepto}. Quedamos a sus órdenes para cualquier duda. ¡Saludos! 💃`
                                                     )}`}
                                                     target="_blank"
