@@ -1,0 +1,109 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nombre    String
+  rol       String   // "padre" | "maestro" | "admin"
+  avatar    String?
+  telefono  String?
+  createdAt DateTime @default(now())
+  
+  // Relaciones
+  estudiantes        Estudiante[]  @relation("TutorEstudiantes")
+  asistenciasTomadas Asistencia[]  @relation("MaestroAsistencias")
+  pautasCreadas      Pauta[]       @relation("MaestroPautas")
+  pagos              Pago[]        @relation("TutorPagos")
+}
+
+model Estudiante {
+  id              Int      @id @default(autoincrement())
+  nombre          String
+  apellido        String
+  fechaNacimiento DateTime
+  foto            String
+  especialidad    String   // "Ballet" | "Contemporáneo" | "Hip-Hop" | "Jazz"
+  nivel           String   // "Principiante" | "Intermedio" | "Avanzado"
+  puntos          Int      @default(0)
+  
+  tutorId         Int
+  tutor           Usuario  @relation("TutorEstudiantes", fields: [tutorId], references: [id])
+  
+  asistencias     Asistencia[]
+  pautas          Pauta[]
+  logros          Logro[]
+}
+
+model Asistencia {
+  id           Int      @id @default(autoincrement())
+  fecha        DateTime @default(now())
+  estado       String   // "presente" | "ausente" | "tarde" | "justificado"
+  clase        String   // "Ballet Intermedio - Grupo A"
+  
+  estudianteId Int
+  estudiante   Estudiante @relation(fields: [estudianteId], references: [id])
+  
+  maestroId    Int
+  maestro      Usuario @relation("MaestroAsistencias", fields: [maestroId], references: [id])
+}
+
+model Pauta {
+  id              Int      @id @default(autoincrement())
+  fecha           DateTime @default(now())
+  uniforme        String   // "completo" | "incompleto" | "no_presento"
+  disciplina      Int      // 1-5
+  participacion   Int      // 1-10
+  progreso        String   // "sobresaliente" | "esperado" | "necesita_refuerzo"
+  comentarios     String?
+  
+  estudianteId    Int
+  estudiante      Estudiante @relation(fields: [estudianteId], references: [id])
+  
+  maestroId       Int
+  maestro         Usuario @relation("MaestroPautas", fields: [maestroId], references: [id])
+}
+
+model Logro {
+  id           Int      @id @default(autoincrement())
+  tipo         String   // "estrella_ascenso" | "rey_disciplina" | etc
+  nombre       String
+  descripcion  String
+  icono        String   // emoji
+  puntos       Int
+  fecha        DateTime @default(now())
+  
+  estudianteId Int
+  estudiante   Estudiante @relation(fields: [estudianteId], references: [id])
+}
+
+model Pago {
+  id               Int      @id @default(autoincrement())
+  concepto         String
+  monto            Float
+  fechaVenc        DateTime
+  estado           String   // "pendiente" | "pagado" | "vencido"
+  estudianteNombre String?
+  
+  tutorId          Int
+  tutor            Usuario  @relation("TutorPagos", fields: [tutorId], references: [id])
+}
+
+model Evento {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  tipo        String   // "recital" | "competencia" | "ensayo" | "showcase"
+  fecha       DateTime
+  ubicacion   String
+  descripcion String?
+  banner      String?
+}
